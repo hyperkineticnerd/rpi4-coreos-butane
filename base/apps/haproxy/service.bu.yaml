@@ -1,0 +1,51 @@
+variant: fcos
+version: 1.4.0
+systemd:
+  units:
+    - name: haproxy-certs.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=HAProxy Certs
+        Requires=network-online.target
+        Requires=chrony-wait.service
+        After=network-online.target
+        After=chrony-wait.service
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStartPre=-/bin/bash /var/opt/haproxy/acme.sh
+        ExecStart=-/bin/bash /var/opt/haproxy/deploy.sh
+
+        [Install]
+        WantedBy=multi-user.target
+
+    - name: haproxy.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=HAProxy
+        Requires=network-online.target
+        Requires=chrony-wait.service
+        Requires=haproxy-certs.service
+        After=network-online.target
+        After=chrony-wait.service
+        After=haproxy-certs.service
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStartPre=-/bin/podman kill haproxy
+        ExecStartPre=-/bin/podman rm haproxy
+        ExecStartPre=-/bin/podman pull docker.io/library/haproxy:latest
+        ExecStart=/bin/podman run \
+            --name haproxy \
+            --net=host \
+            --volume /var/opt/haproxy:/usr/local/etc/haproxy:Z,ro \
+            --publish 443:443/tcp \
+            --publish 1443:1443/tcp \
+            --publish 8448:8448/tcp \
+            --cap-add=NET_ADMIN \
+            docker.io/library/haproxy:latest
+
+        [Install]
+        WantedBy=multi-user.target

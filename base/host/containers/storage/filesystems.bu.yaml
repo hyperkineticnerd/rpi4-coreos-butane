@@ -1,0 +1,9 @@
+variant: fcos
+version: 1.4.0
+storage:
+  filesystems:
+    - path: /var/lib/containers
+      device: /dev/disk/by-partlabel/containers
+      format: xfs
+      wipe_filesystem: true
+      with_mount_unit: true

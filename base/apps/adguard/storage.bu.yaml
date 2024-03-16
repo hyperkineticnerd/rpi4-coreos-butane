@@ -1,0 +1,8 @@
+variant: fcos
+version: 1.4.0
+storage:
+  directories:
+    - path: /opt/adguard/conf
+      overwrite: true
+    - path: /opt/adguard/work
+      overwrite: true

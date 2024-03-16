@@ -1,0 +1,12 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+    - path: /etc/NetworkManager/conf.d/noauto.conf
+      mode: 0644
+      contents:
+        inline: |
+          [main]
+          # Do not do automatic (DHCP/SLAAC) configuration on ethernet devices
+          # with no other matching connections.
+          no-auto-default=*

@@ -1,0 +1,43 @@
+variant: fcos
+version: 1.4.0
+systemd:
+  units:
+    - name: chronyd.service
+      enabled: true
+    - name: chrony-wait.service
+      enabled: true
+    - name: pihole.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Pi-hole
+        Requires=network-online.target
+        Requires=chrony-wait.service
+        After=network-online.target
+        After=chrony-wait.service
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStop=/bin/podman stop pihole
+        ExecStartPre=mkdir -p /opt/pihole
+        ExecStartPre=-/bin/podman kill pihole
+        ExecStartPre=-/bin/podman rm pihole
+        ExecStartPre=-/bin/podman pull docker.io/pihole/pihole:latest
+        ExecStart=/bin/podman run \
+            --net=host \
+            --name pihole \
+            --volume /opt/pihole/etc/:/etc/pihole/:Z \
+            --volume /opt/pihole/dnsmasq.d/:/etc/dnsmasq.d/:Z \
+            --volume /var/lib/pihole/certs/combined.pem:/etc/lighttpd/tls/combined.pem:Z \
+            --volume /var/lib/pihole/lighttpd/20-ssl.conf:/etc/lighttpd/conf-enabled/20-ssl.conf:Z \
+            --env-file /etc/default/pihole \
+            --publish 53:53/tcp \
+            --publish 53:53/udp \
+            --publish 67:67/udp \
+            --publish 80:80/tcp \
+            --publish 443:443/tcp \
+            --cap-add=NET_ADMIN \
+            docker.io/pihole/pihole:latest
+
+        [Install]
+        WantedBy=multi-user.target

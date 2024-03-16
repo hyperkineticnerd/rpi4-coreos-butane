@@ -1,0 +1,9 @@
+variant: fcos
+version: 1.4.0
+storage:
+  filesystems:
+    - path: /var/lib/homebridge
+      device: /dev/disk/by-partlabel/homebridge
+      format: xfs
+      wipe_filesystem: false
+      with_mount_unit: true

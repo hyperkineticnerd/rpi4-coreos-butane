@@ -1,0 +1,7 @@
+variant: fcos
+version: 1.4.0
+passwd:
+  users:
+    - name: core
+      ssh_authorized_keys:
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDdhA3VKzyW/iUIvWR17A9OMEl8W7nRyEal7dVo6Sc8EFQG3wWRhaog+ywzXL+w2969/befo2iMJ4g6sooPeIrilJmORTWJCDxro3EP/kg88wW1bwRbppAHQQiBMgp7ygvtAYO1/wnzRvPmS1G7P8cfWwvhwUCSV2Qh6Nql1by7ivTuAT9eB2eT6qXK/+E+7rYQ/c3bDlljza38D4h0WX/64AORcBPqsygt+O6462fZ1Fi+sKKa1JxVQndRjWSVLC0j0X4k+dLFtgy3po+eRBFx5ygXlHC8KsMEk/VuyyshoEZ+07f2B/IKMD+0QxodomFsMS0q1mTj8YuISYwSqCrg6irQZ7E3F4eqidsv91yFm7XVYkvw4+M3SnZ1zL3NOS7JvguiBvjfD4yG/4xhxNO9dXEvQcESF15xW0bJVpoGg5ihMRulKj7IWl8CegLtND/t2HxmjTbc9IKKaFTB1gGx60wPD2DF1Uqcq7eHCDIQj/mkJjWBM5+DTmh2BX4QgXE4UGzUj3qQy5ksH9hnsuokO17MdNT61e/mHu3i575sfX/wEy7Aeg2jCZj3RMX07SW9noP5iiuFQgvPV/u0rvssBlBTpV0QFQKH/RqHPXlADWtwfqw8raVCjFaNgsxVAdZJnLZEuTEwWZCJUuu/FJPQE3XlVwip50bXsScD85qhJQ== snelson@hkn-desktop

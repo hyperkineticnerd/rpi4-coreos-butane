@@ -1,0 +1,28 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+    - path: /etc/sysctl.d/30-ipv6-disable.conf
+      mode: 0644
+      contents:
+        inline: |
+          # Disable IPv6
+          net.ipv6.conf.all.disable_ipv6=1
+          net.ipv6.conf.lo.disable_ipv6=0
+
+    - path: /etc/NetworkManager/system-connections/Wired\ connection\ 1.nmconnection
+      mode: 0600
+      contents:
+        inline: |
+          [connection]
+          id=Wired connection 1
+          type=ethernet
+          autoconnect-priority=-999
+          interface-name=eth0
+          [ethernet]
+          [ipv4]
+          method=auto
+          [ipv6]
+          addr-gen-mode=stable-privacy
+          method=disabled
+          [proxy]

@@ -1,0 +1,33 @@
+variant: fcos
+version: 1.4.0
+systemd:
+  units:
+    - name: chronyd.service
+      enabled: true
+    - name: chrony-wait.service
+      enabled: true
+    - name: invidious.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Invidious
+        Requires=network-online.target
+        Requires=chrony-wait.service
+        After=network-online.target
+        After=chrony-wait.service
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStop=/bin/podman stop invidious
+        ExecStartPre=-/bin/podman kill invidious
+        ExecStartPre=-/bin/podman rm invidious
+        ExecStartPre=-/bin/podman pull quay.io/invidious/invidious:latest-arm64
+        ExecStart=/bin/podman run \
+            --name invidious \
+            --publish 3000:3000/tcp \
+            --env-file /etc/default/invidious \
+            quay.io/invidious/invidious:latest-arm64 \
+            start
+
+        [Install]
+        WantedBy=multi-user.target

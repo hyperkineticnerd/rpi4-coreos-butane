@@ -1,0 +1,9 @@
+variant: fcos
+version: 1.4.0
+storage:
+  filesystems:
+    - path: /var/lib/ipa-data
+      device: /dev/disk/by-partlabel/ipa-data
+      format: xfs
+      wipe_filesystem: false
+      with_mount_unit: true

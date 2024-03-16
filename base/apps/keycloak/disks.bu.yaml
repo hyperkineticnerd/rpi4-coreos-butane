@@ -1,0 +1,15 @@
+variant: fcos
+version: 1.4.0
+storage:
+  disks:
+  - device: /dev/mmcblk0
+    wipe_table: false
+    partitions:
+    - label: keycloak-data
+      # number: 3
+      size_mib: 8192
+      # start_mib: 34
+      # type_guid: 0FC63DAF-8483-4772-8E79-3D69D8477DE4
+      # guid: 20526978-B391-40D8-A68D-510657725216
+      wipe_partition_entry: false
+      resize: false

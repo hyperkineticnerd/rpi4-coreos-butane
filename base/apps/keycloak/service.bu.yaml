@@ -1,0 +1,36 @@
+variant: fcos
+version: 1.4.0
+systemd:
+  units:
+    - name: chronyd.service
+      enabled: true
+    - name: chrony-wait.service
+      enabled: true
+    - name: keycloak.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=KeyCloak
+        Requires=network-online.target
+        Requires=chrony-wait.service
+        After=network-online.target
+        After=chrony-wait.service
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStop=/bin/podman stop keycloak
+        ExecStartPre=mkdir -p /var/lib/keycloak
+        ExecStartPre=-/bin/podman kill keycloak
+        ExecStartPre=-/bin/podman rm keycloak
+        ExecStartPre=-/bin/podman pull quay.io/keycloak/keycloak:22.0.0
+        ExecStart=/bin/podman run \
+            --name keycloak \
+            --publish 8443:8443/tcp \
+            --publish 8080:8080/tcp \
+            --env-file /etc/default/keycloak \
+            --volume /var/lib/keycloak/keycloak.jks:/opt/keycloak/conf/server.keystore:Z \
+            quay.io/keycloak/keycloak:22.0.0 \
+            start
+
+        [Install]
+        WantedBy=multi-user.target

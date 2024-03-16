@@ -1,0 +1,8 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+    - path: /etc/hostname
+      mode: 0644
+      contents:
+        inline: rpi0.metal.example.com

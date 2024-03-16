@@ -1,0 +1,34 @@
+variant: fcos
+version: 1.4.0
+
+storage:
+  files:
+    - path: /etc/NetworkManager/conf.d/dns.conf
+      user:
+        id: 0
+      group:
+        id: 0
+      mode: 0644
+      contents:
+        inline: |
+          [main]
+          dns=default
+    - path: /etc/resolv.conf
+      overwrite: true
+      contents:
+        inline: |
+          nameserver 1.1.1.1
+      mode: 0644
+      user:
+        id: 0
+      group:
+        id: 0
+
+systemd:
+  units:
+    - name: coreos-migrate-to-systemd-resolved.service
+      enabled: false
+      mask: true
+    - name: systemd-resolved.service
+      enabled: false
+      mask: true

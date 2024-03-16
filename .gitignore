@@ -1,0 +1,6 @@
+# injected files
+files/**
+
+# TLS
+*.key
+*.crt

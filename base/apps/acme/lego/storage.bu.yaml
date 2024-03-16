@@ -1,0 +1,8 @@
+variant: fcos
+version: 1.4.0
+storage:
+  directories:
+  - path: /var/opt/acme
+    overwrite: true
+  - path: /opt/lego/dns-credentials
+    overwrite: true

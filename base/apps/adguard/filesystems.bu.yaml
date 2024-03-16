@@ -1,0 +1,14 @@
+variant: fcos
+version: 1.4.0
+storage:
+  # filesystems:
+  #   - path: /var/opt/adguard
+  #     device: /dev/disk/by-partlabel/adguard
+  #     format: xfs
+  #     wipe_filesystem: false
+  #     with_mount_unit: true
+  directories:
+    - path: /opt/adguard/conf
+      overwrite: true
+    - path: /opt/adguard/work
+      overwrite: true

@@ -1,0 +1,54 @@
+variant: fcos
+version: 1.4.0
+storage:
+  directories:
+    - path: /opt/netbox/etc
+      overwrite: true
+    - path: /opt/netbox/data
+      overwrite: true
+    - path: /opt/postgres/data
+      overwrite: true
+    - path: /opt/redis/data
+      overwrite: true
+  files:
+    - path: /etc/defaults/netbox
+      contents:
+        inline: |
+          TZ='America/Denver'
+          SUPERUSER_EMAIL=admin@netbox.local
+          SUPERUSER_PASSWORD='changeme'
+          ALLOWED_HOST='netbox.example.com 192.168.1.15 localhost ::1 127.0.0.1'
+          DB_NAME=netbox
+          DB_USER=netbox
+          DB_PASSWORD=netbox
+          DB_HOST=web.example.com
+          DB_PORT=5433
+          REDIS_HOST=web.example.com
+          REDIS_PORT=6379
+          REDIS_PASSWORD=redis
+          REDIS_DB_TASK=0
+          REDIS_DB_CACHE=1
+systemd:
+  units:
+    - name: netbox.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=NetBox
+        After=network-online.target,postgresql.service,redis.service
+        Wants=network-online.target
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStartPre=-/bin/podman pull lscr.io/linuxserver/netbox:latest
+        ExecStartPre=-/bin/podman kill netbox
+        ExecStartPre=-/bin/podman rm netbox
+        ExecStart=/bin/podman run \
+            --name netbox \
+            --env-file /etc/defaults/netbox \
+            --publish 8000:8000 \
+            --volume /opt/netbox/etc:/config:Z \
+            lscr.io/linuxserver/netbox:latest
+
+        [Install]
+        WantedBy=multi-user.target

@@ -1,0 +1,14 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+  - path: /var/opt/acme/environment
+    contents:
+      inline: |
+        HURRICANE_TOKENS=example.com:tPBQB2mkIHEbC7dH,keycloak.example.com:g3JTbu3Aa9MBJlDU,jellyfin.example.com:ytwG59JGogQgNIJb,matrix.example.com:C7qdoxtU20JqGMyu
+    overwrite: true
+    mode: 0644
+    user:
+      id: 0
+    group:
+      id: 0

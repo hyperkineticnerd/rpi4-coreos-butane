@@ -1,0 +1,54 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+    - path: /var/opt/haproxy/haproxy.cfg
+      contents:
+        local: files/haproxy/haproxy.cfg
+      overwrite: true
+      mode: 0644
+      user:
+        id: 0
+      group:
+        id: 0
+
+    - path: /var/opt/haproxy/acme.sh
+      contents:
+        local: files/haproxy/acme.sh
+      overwrite: true
+      mode: 0755
+      user:
+        id: 0
+      group:
+        id: 0
+
+    - path: /var/opt/haproxy/deploy.sh
+      contents:
+        local: files/haproxy/deploy.sh
+      overwrite: true
+      mode: 0755
+      user:
+        id: 0
+      group:
+        id: 0
+
+    # GITLAB Certs
+    - path: /var/opt/haproxy/certs/gitlab.developer.example.com.crt
+      contents:
+        local: files/certs/gitlab.developer.example.com.crt
+      overwrite: true
+      mode: 0644
+      user:
+        id: 0
+      group:
+        id: 0
+
+    - path: /var/opt/haproxy/certs/gitlab.developer.example.com.crt.key
+      contents:
+        local: files/certs/gitlab.developer.example.com.key
+      overwrite: true
+      mode: 0644
+      user:
+        id: 0
+      group:
+        id: 0

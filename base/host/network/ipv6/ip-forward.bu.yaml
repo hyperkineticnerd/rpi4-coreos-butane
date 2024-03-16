@@ -1,0 +1,9 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+    - path: /etc/sysctl.d/90-ipv6-ip-forwarding.conf
+      mode: 0644
+      contents:
+        inline: |
+          net.ipv6.conf.all.forwarding = 1

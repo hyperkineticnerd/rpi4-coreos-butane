@@ -1,0 +1,45 @@
+variant: fcos
+version: 1.4.0
+systemd:
+  units:
+    - name: lego@jellyfin.example.com.service
+      enabled: true
+    - name: lego@matrix.example.com.service
+      enabled: true
+    - name: lego@keycloak.example.com.service
+      enabled: true
+    - name: lego@example.com.service
+      enabled: true
+    - name: lego@.service
+      enabled: false
+      contents: |
+        [Unit]
+        Description=Let's Encrypt on GoLang (LEGO) for %I
+        Requires=network-online.target
+        Requires=chrony-wait.service
+        After=network-online.target
+        After=chrony-wait.service
+
+        [Service]
+        Type=oneshot
+        TimeoutStartSec=0
+        ExecStartPre=-/bin/podman kill lego-%i
+        ExecStartPre=-/bin/podman rm lego-%i
+        ExecStartPre=-/bin/podman pull docker.io/goacme/lego:v4.8.0
+        ExecStart=/bin/podman run \
+          --name lego-%i \
+          --net=host \
+          --volume /var/opt/acme:/.lego:Z \
+          --env-file /var/opt/acme/environment \
+          docker.io/goacme/lego:v4.8.0 \
+            --email sean.nelson.04@gmail.com \
+            --accept-tos \
+            --dns hurricane \
+            --server https://acme-staging-v02.api.letsencrypt.org/directory \
+            --domains %i \
+            --pem \
+            run
+        ExecStartPost=-/var/opt/acme/haproxy-certs.sh
+
+        [Install]
+        WantedBy=multi-user.target

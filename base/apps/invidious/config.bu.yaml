@@ -1,0 +1,21 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+    - path: /etc/default/invidious
+      mode: 0644
+      contents:
+        inline: |
+          INVIDIOUS_CONFIG: |
+            db:
+              dbname: invidious
+              user: invidious
+              password: invidious
+              host: 192.168.2.4
+              port: 5432
+            check_tables: true
+            # external_port:
+            # domain:
+            # https_only: false
+            # statistics_enabled: false
+            hmac_key: "CHANGE_ME!!"

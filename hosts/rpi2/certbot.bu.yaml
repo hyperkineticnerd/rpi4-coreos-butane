@@ -1,0 +1,38 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+    - path: /etc/default/certbot
+      mode: 0644
+      overwrite: true
+      contents:
+        inline: |
+          CERT_DOMAIN=keycloak.service.example.com
+
+          CERTBOT_KRB5_REALM=example.com
+          CERTBOT_KRB5_DOMAIN=example.com
+          CERTBOT_KRB5_SERVER=ipa1.example.com
+
+          CERTBOT_KRB5_USERNAME=admin
+          CERTBOT_KRB5_PASSWORD=changeme
+
+          REQUESTS_CA_BUNDLE=/etc/letsencrypt/ipa-ca.crt
+
+    - path: /etc/letsencrypt/cli.ini
+      mode: 0644
+      overwrite: true
+      contents:
+        inline: |
+          key-type = rsa
+          rsa-key-size = 4096
+          email = admin@example.com
+          agree-tos = true
+          server = https://ipa-ca.example.com/acme/directory
+          preferred-challenges = dns
+          manual = true
+          manual-auth-hook = /var/lib/letsencrypt/certbot-dns-ipa.py
+          manual-cleanup-hook = /var/lib/letsencrypt/certbot-dns-ipa.py
+          ; manual-auth-hook = /usr/libexec/ipa/acme/certbot-dns-ipa
+          ; manual-cleanup-hook = /usr/libexec/ipa/acme/certbot-dns-ipa
+          ; dns-cloudflare-credentials = /var/lib/letsencrypt/cloudflare.ini
+          ; dns-cloudflare-propagation-seconds = 10

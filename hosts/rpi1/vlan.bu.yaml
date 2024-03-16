@@ -1,0 +1,44 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+    - path: /etc/NetworkManager/system-connections/eth0.nmconnection
+      mode: 0600
+      contents:
+        inline: |
+          [connection]
+          id=eth0
+          type=ethernet
+          interface-name=eth0
+
+          [ipv4]
+          address1=192.168.2.11/23,192.168.2.1
+          dhcp-hostname=rpi1.metal.example.com
+          dns=192.168.2.13;192.168.2.11;1.1.1.1;
+          dns-search=
+          method=manual
+          may-fail=false
+
+    - path: /etc/NetworkManager/system-connections/eth0.3001.nmconnection
+      mode: 0600
+      contents:
+        inline: |
+          [connection]
+          id=eth0.3001
+          type=vlan
+          interface-name=eth0.3001
+
+          [vlan]
+          egress-priority-map=
+          flags=1
+          id=3001
+          ingress-priority-map=
+          parent=eth0
+
+          [ipv4]
+          address1=192.168.254.2/23,192.168.254.1
+          dhcp-hostname=rpi1.metal.example.com
+          dns=192.168.2.13;192.168.2.11;1.1.1.1;
+          dns-search=
+          method=manual
+          may-fail=false

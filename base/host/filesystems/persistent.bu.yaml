@@ -1,0 +1,15 @@
+variant: fcos
+version: 1.1.0
+storage:
+  disks:
+    - device: /dev/sda
+      wipe_table: true
+      partitions:
+        - label: var
+  filesystems:
+    - device: /dev/disk/by-partlabel/var
+      label: var
+      format: xfs
+      wipe_filesystem: false
+      path: /var
+      with_mount_unit: true

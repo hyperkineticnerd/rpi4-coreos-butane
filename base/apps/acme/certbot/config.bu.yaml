@@ -1,0 +1,21 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+    - path: /etc/ipa/ca.crt
+      mode: 0644
+      overwrite: true
+      contents:
+        source: https://ipa-ca.example.com/ipa/config/ca.crt
+
+    - path: /etc/letsencrypt/ipa-ca.crt
+      mode: 0644
+      overwrite: true
+      contents:
+        source: https://ipa-ca.example.com/ipa/config/ca.crt
+
+    - path: /var/lib/letsencrypt/certbot-dns-ipa.py
+      mode: 0755
+      overwrite: true
+      contents:
+        local: files/certbot/certbot-dns-ipa.py

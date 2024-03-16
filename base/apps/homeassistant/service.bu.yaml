@@ -1,0 +1,29 @@
+variant: fcos
+version: 1.4.0
+systemd:
+  units:
+    - name: homeassistant.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=HomeAssistant
+        Requires=network-online.target
+        Requires=chrony-wait.service
+        After=network-online.target
+        After=chrony-wait.service
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStartPre=-/bin/podman kill homeassistant
+        ExecStartPre=-/bin/podman rm homeassistant
+        ExecStartPre=-/bin/podman pull ghcr.io/home-assistant/home-assistant:stable
+        ExecStart=/bin/podman run \
+            --name homeassistant \
+            --net=host \
+            --privileged \
+            --env TZ=America/Denver \
+            --volume /var/lib/homeassistant:/config:Z \
+            ghcr.io/home-assistant/home-assistant:stable
+
+        [Install]
+        WantedBy=multi-user.target

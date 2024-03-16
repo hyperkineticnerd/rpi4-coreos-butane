@@ -1,0 +1,32 @@
+variant: fcos
+version: 1.4.0
+storage:
+  disks:
+  - device: /dev/mmcblk0
+    wipe_table: false
+    partitions:
+    - label: containers
+      number: 2
+      size_mib: 3072
+    - label: acme
+      number: 3
+      size_mib: 4096
+    - label: haproxy
+      number: 4
+      size_mib: 4096
+ignition:
+  config:
+    merge:
+      - source: http://web.example.com/coreos/base/host/users/core.ign
+      - source: http://web.example.com/coreos/base/host/network/time.ign
+      - source: http://web.example.com/coreos/base/host/network/dns/homelab.ign
+      - source: http://web.example.com/coreos/base/host/network/fqdn/hostname-rpi2.ign
+      - source: http://web.example.com/coreos/base/host/network/ipv4/unprivileged-port.ign
+      # - source: http://web.example.com/coreos/base/host/network/ipv6/disabled.ign
+      # - source: http://web.example.com/coreos/base/host/containers/storage/filesystems.ign
+      # - source: http://web.example.com/coreos/base/apps/acme/lego/filesystems.ign
+      # - source: http://web.example.com/coreos/base/apps/acme/lego/config.ign
+      # - source: http://web.example.com/coreos/base/apps/acme/lego/service.ign
+      # - source: http://web.example.com/coreos/base/apps/haproxy/filesystems.ign
+      # - source: http://web.example.com/coreos/base/apps/haproxy/config.ign
+      # - source: http://web.example.com/coreos/base/apps/haproxy/service.ign

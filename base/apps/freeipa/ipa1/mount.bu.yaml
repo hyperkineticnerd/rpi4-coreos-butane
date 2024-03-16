@@ -1,0 +1,18 @@
+variant: fcos
+version: 1.4.0
+systemd:
+  units:
+    - name: var-mnt-nfs-ipadata.mount
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Mount IPA data directory
+
+        [Mount]
+        What=web.example.com:/volume1/docker/volumes/idm1
+        Where=/var/mnt/nfs/ipadata
+        Type=nfs4
+        Options=_netdev,auto,async,rw
+
+        [Install]
+        WantedBy=multi-user.target

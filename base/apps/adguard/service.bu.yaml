@@ -1,0 +1,50 @@
+variant: fcos
+version: 1.4.0
+systemd:
+  units:
+    - name: chronyd.service
+      enabled: true
+    - name: chrony-wait.service
+      enabled: true
+    - name: adguard.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=AdGuard Home
+        Requires=network-online.target
+        Requires=chrony-wait.service
+        After=network-online.target
+        After=chrony-wait.service
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStop=/bin/podman stop adguard
+        ExecStartPre=mkdir -p /opt/adguard
+        ExecStartPre=-/bin/podman kill adguard
+        ExecStartPre=-/bin/podman rm adguard
+        ExecStartPre=-/bin/podman pull docker.io/adguard/adguardhome:latest
+        ExecStart=/bin/podman run \
+            --net=host \
+            --name adguard \
+            --volume /opt/adguard/work:/opt/adguard/work:Z \
+            --volume /opt/adguard/conf:/opt/adguard/conf:Z \
+            --env-file /etc/default/adguard \
+            --publish 53:53/tcp \
+            --publish 53:53/udp \
+            --publish 67:67/udp \
+            --publish 68:68/udp \
+            --publish 80:80/tcp \
+            --publish 443:443/tcp \
+            --publish 443:443/udp \
+            --publish 784:784/udp \
+            --publish 853:853/tcp \
+            --publish 853:853/udp \
+            --publish 3000:3000/tcp \
+            --publish 5443:5443/tcp \
+            --publish 5443:5443/udp \
+            --publish 8853:8853/udp \
+            --cap-add=NET_ADMIN \
+            docker.io/adguard/adguardhome:latest
+
+        [Install]
+        WantedBy=multi-user.target

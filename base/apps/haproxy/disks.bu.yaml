@@ -1,0 +1,10 @@
+variant: fcos
+version: 1.4.0
+storage:
+  disks:
+  - device: /dev/mmcblk0
+    wipe_table: false
+    partitions:
+    - label: haproxy
+      number: 3
+      size_mib: 256

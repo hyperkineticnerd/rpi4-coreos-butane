@@ -1,0 +1,10 @@
+variant: fcos
+version: 1.4.0
+ignition:
+  security:
+    tls:
+      certificate_authorities:
+        - source: http://web.example.com/coreos/base/host/security/ca.crt
+          compression: null
+        # - source: https://ipa-ca.example.com/ipa/config/ca.crt
+        #   compression: null

@@ -1,0 +1,43 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+    - path: /var/lib/ipa-data/ipa-server-install-options
+      overwrite: true
+      user:
+        id: 0
+      group:
+        id: 0
+      mode: 0644
+      contents:
+        inline: |
+          --ds-password='changeme'
+          --admin-password='changeme'
+          --domain=example.com
+          --realm=example.com
+          --setup-dns
+          --forwarder 192.168.1.1
+          --unattended
+          --hostname ipa1.example.com
+          --ip-address 192.168.1.3
+          --no-host-dns
+          --no-ntp
+        # --mkhomedir
+        # --auto-reverse
+        # --auto-forwarders
+
+    # - path: /var/mnt/nfs/ipadata/ipa-server-install-options
+    #   user:
+    #     id: 0
+    #   group:
+    #     id: 0
+    #   mode: 0644
+    #   contents:
+    #     inline: |
+    #       --realm=example.com
+    #       --ds-password='changeme'
+    #       --admin-password='changeme'
+    #       --setup-dns
+    #       --forwarder 192.168.1.1
+    #       --unattended
+    #       --no-ntp

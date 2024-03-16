@@ -1,0 +1,9 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+    - path: /etc/sysctl.d/90-ipv4-ip-forward.conf
+      mode: 0644
+      contents:
+        inline: |
+          net.ipv4.ip_forward = 1

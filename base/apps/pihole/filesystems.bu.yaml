@@ -1,0 +1,16 @@
+variant: fcos
+version: 1.4.0
+storage:
+  # filesystems:
+  #   - path: /var/opt/pihole
+  #     device: /dev/disk/by-partlabel/pihole
+  #     format: xfs
+  #     wipe_filesystem: false
+  #     with_mount_unit: true
+  directories:
+    - path: /opt/pihole/etc
+      overwrite: true
+    - path: /opt/pihole/dnsmasq.d
+      overwrite: true
+    - path: /var/lib/pihole
+      overwrite: true

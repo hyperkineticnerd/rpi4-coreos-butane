@@ -1,0 +1,51 @@
+# ZEROTIER_API_SECRET=
+# ZEROTIER_IDENTITY_PUBLIC=
+# ZEROTIER_IDENTITY_SECRET=
+---
+variant: fcos
+version: 1.4.0
+storage:
+  directories:
+    - path: /opt/zerotier/etc
+      overwrite: true
+    - path: /opt/zerotier/data
+      overwrite: true
+  files:
+  - path: /opt/zerotier/etc/environment
+    mode: 0644
+    contents:
+      inline: |
+        ZEROTIER_ONE_NETWORK_IDS=abcdefdeadbeef000
+        TZ=America/Denver
+
+systemd:
+  units:
+    - name: zerotier.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=ZeroTier
+        After=network-online.target
+        Wants=network-online.target
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStop=/bin/podman stop zerotier
+        ExecStartPre=mkdir -p /opt/zerotier/data
+        ExecStartPre=-/bin/podman pull docker.io/zerotier/zerotier:latest
+        ExecStartPre=-/bin/podman stop -t 10 zerotier
+        ExecStartPre=-/bin/podman rm zerotier
+        ExecStart=/bin/podman run \
+            --net=host \
+            --name zerotier \
+            --env-file /opt/zerotier/etc/environment \
+            --volume /opt/zerotier/data:/var/lib/zerotier-one:z \
+            --device /dev/net/tun \
+            --publish 9993:9993/tcp \
+            --cap-add=NET_ADMIN \
+            --cap-add=SYS_ADMIN \
+            docker.io/zerotier/zerotier:latest \
+            $ZEROTIER_ONE_NETWORK_IDS
+
+        [Install]
+        WantedBy=multi-user.target

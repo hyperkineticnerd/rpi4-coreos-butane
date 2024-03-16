@@ -1,0 +1,10 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+    - path: /etc/default/adguard
+      mode: 0644
+      overwrite: true
+      contents:
+        inline: |
+          TZ=America/Denver

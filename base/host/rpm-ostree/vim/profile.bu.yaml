@@ -1,0 +1,12 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+    # Set vim as default editor
+    # We use `zz-` as prefix to make sure this is processed last in order to
+    # override any previously set defaults.
+    - path: /etc/profile.d/zz-default-editor.sh
+      overwrite: true
+      contents:
+        inline: |
+          export EDITOR=vim

@@ -1,0 +1,39 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+    - path: /etc/NetworkManager/system-connections/${bridgename}.nmconnection
+      mode: 0600
+      contents:
+        inline: |
+          [connection]
+          id=${bridgename}
+          type=bridge
+          interface-name=${bridgename}
+          [bridge]
+          [ipv4]
+          dns-search=
+          may-fail=false
+          method=auto
+    - path: /etc/NetworkManager/system-connections/${bridgename}-slave-${subnic1}.nmconnection
+      mode: 0600
+      contents:
+        inline: |
+          [connection]
+          id=${bridgename}-slave-${subnic1}
+          type=ethernet
+          interface-name=${subnic1}
+          master=${bridgename}
+          slave-type=bridge
+          [bridge-port]
+    - path: /etc/NetworkManager/system-connections/${bridgename}-slave-${subnic2}.nmconnection
+      mode: 0600
+      contents:
+        inline: |
+          [connection]
+          id=${bridgename}-slave-${subnic2}
+          type=ethernet
+          interface-name=${subnic2}
+          master=${bridgename}
+          slave-type=bridge
+          [bridge-port]

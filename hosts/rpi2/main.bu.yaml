@@ -1,0 +1,33 @@
+variant: fcos
+version: 1.4.0
+storage:
+  disks:
+    - device: /dev/mmcblk0
+      wipe_table: false
+      partitions:
+        - label: containers
+          number: 2
+          size_mib: 3072
+        - label: keycloak-data
+          number: 3
+          size_mib: 8192
+ignition:
+  config:
+    merge:
+      - source: http://web.example.com/coreos/base/host/users/core.ign
+      - source: http://web.example.com/coreos/base/host/network/time.ign
+      - source: http://web.example.com/coreos/base/host/network/dns/homelab.ign
+      - source: http://web.example.com/coreos/base/host/network/fqdn/hostname-rpi2.ign
+      - source: http://web.example.com/coreos/base/host/network/ipv6/disabled.ign
+      - source: http://web.example.com/coreos/base/host/security/freeipa.ign
+      # - source: http://web.example.com/coreos/base/host/rpm-ostree/vim/service.ign
+      # - source: http://web.example.com/coreos/base/host/rpm-ostree/vim/profile.ign
+      # - source: http://web.example.com/coreos/base/host/containers/storage/partitions.ign
+      - source: http://web.example.com/coreos/base/host/containers/storage/filesystems.ign
+      - source: http://web.example.com/coreos/base/apps/acme/certbot/filesystems.ign
+      - source: http://web.example.com/coreos/base/apps/acme/certbot/config.ign
+      - source: http://web.example.com/coreos/base/apps/acme/certbot/service.ign
+      - source: http://web.example.com/coreos/base/apps/keycloak/filesystems.ign
+      - source: http://web.example.com/coreos/base/apps/keycloak/config.ign
+      - source: http://web.example.com/coreos/base/apps/keycloak/service.ign
+      - source: http://web.example.com/coreos/hosts/rpi2/certbot.ign

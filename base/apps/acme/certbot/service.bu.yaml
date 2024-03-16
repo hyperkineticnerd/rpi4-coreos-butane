@@ -1,0 +1,36 @@
+variant: fcos
+version: 1.4.0
+systemd:
+  units:
+    - name: chronyd.service
+      enabled: true
+    - name: chrony-wait.service
+      enabled: true
+    - name: certbot.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Certbot
+        Requires=network-online.target
+        Requires=chrony-wait.service
+        After=network-online.target
+        After=chrony-wait.service
+
+        [Service]
+        TimeoutStartSec=0
+        EnvironmentFile=/etc/default/certbot
+        ExecStartPre=-/bin/podman kill certbot
+        ExecStartPre=-/bin/podman rm certbot
+        ExecStartPre=-/bin/podman pull quay.io/hyperkineticnerd/certbot-dns-ipa:latest
+        ExecStart=/bin/podman run \
+            --name certbot \
+            --net=host \
+            --env-file /etc/default/certbot \
+            --volume /etc/letsencrypt:/etc/letsencrypt:Z \
+            --volume /var/lib/letsencrypt:/var/lib/letsencrypt:Z \
+            --volume /etc/ipa/ca.crt:/etc/ipa/ca.crt:Z \
+            quay.io/hyperkineticnerd/certbot-dns-ipa:latest \
+            certonly -v --domain ${CERT_DOMAIN}
+
+        [Install]
+        WantedBy=multi-user.target

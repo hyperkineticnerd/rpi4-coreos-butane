@@ -1,0 +1,31 @@
+variant: fcos
+version: 1.4.0
+systemd:
+  units:
+    - name: homebridge.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=HomeBridge
+        Requires=network-online.target
+        Requires=chrony-wait.service
+        After=network-online.target
+        After=chrony-wait.service
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStartPre=-/bin/podman kill homebridge
+        ExecStartPre=-/bin/podman rm homebridge
+        ExecStartPre=-/bin/podman pull docker.io/oznu/homebridge:latest
+        ExecStart=/bin/podman run \
+            --name homebridge \
+            --net=host \
+            --privileged \
+            --env TZ=America/Denver \
+            --env HOMEBRIDGE_CONFIG_UI_PORT=8581 \
+            --env ENABLE_AVAHI=1 \
+            --volume /var/lib/homebridge:/homebridge:Z \
+            docker.io/oznu/homebridge:latest
+
+        [Install]
+        WantedBy=multi-user.target

@@ -1,0 +1,129 @@
+variant: fcos
+version: 1.4.0
+storage:
+  directories:
+    - path: /opt/matrix
+      overwrite: true
+    - path: /opt/matrix/files
+      overwrite: true
+    - path: /opt/matrix/files/media_store
+      overwrite: true
+
+  files:
+    - path: /opt/matrix/environment
+      mode: 0644
+      contents:
+        inline: |
+          TZ=America/Denver
+          UID=0
+          GID=0
+
+    - path: /opt/matrix/files/example.com.log.config
+      mode: 0644
+      contents:
+        inline: |
+          version: 1
+          formatters:
+            precise:
+              format: '%(asctime)s - %(name)s - %(lineno)d - %(levelname)s - %(request)s - %(message)s'
+          handlers:
+            console:
+              class: logging.StreamHandler
+              formatter: precise
+          loggers:
+              synapse.storage.SQL:
+                  # beware: increasing this to DEBUG will make synapse log sensitive
+                  # information such as access tokens.
+                  level: INFO
+          root:
+              level: INFO
+              handlers: [console]
+          disable_existing_loggers: false
+
+    - path: /opt/matrix/files/example.com.signing.key
+      mode: 0644
+      contents:
+        inline: |
+          ed25519 a_ZDWe us301kzcdehRQXOLgOd+cp+K5e0bb5m8ZopP0iYPUhs
+
+    - path: /opt/matrix/files/homeserver.yaml
+      mode: 0644
+      contents:
+        inline: |
+          # Configuration file for Synapse.
+          #
+          # This is a YAML file: see [1] for a quick introduction. Note in particular
+          # that *indentation is important*: all the elements of a list or dictionary
+          # should have the same indentation.
+          #
+          # [1] https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html
+          #
+          # For more information on how to configure Synapse, including a complete accounting of
+          # each option, go to docs/usage/configuration/config_documentation.md or
+          # https://matrix-org.github.io/synapse/latest/usage/configuration/config_documentation.html
+          server_name: "example.com"
+          pid_file: /data/homeserver.pid
+          listeners:
+            - port: 8008
+              tls: false
+              type: http
+              x_forwarded: true
+              resources:
+                - names: [client, federation]
+                  compress: false
+          database:
+            name: sqlite3
+            args:
+              database: /data/homeserver.db
+          log_config: "/data/example.com.log.config"
+          media_store_path: /data/media_store
+          registration_shared_secret: "M5X1Z_eL4hg0G4ojB,6yfnIiD6N.anuJbleU@_JCB*u*=8wFG0"
+          report_stats: false
+          macaroon_secret_key: "rqy2QfCKhs5bZP3XXMonY^oEkRLdX1RwOm2JfmgY:U5gHkjZ#,"
+          form_secret: "t-dLt5zdFz;_C,p#jkMM:pre1EK.X#M-bhETRzsok,ttl=~:Jg"
+          signing_key_path: "/data/example.com.signing.key"
+          trusted_key_servers:
+            - server_name: "matrix.org"
+
+systemd:
+  units:
+    - name: matrix.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Matrix Synapse
+        After=network-online.target
+        Wants=network-online.target
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStop=/bin/podman stop matrix
+        ExecStartPre=mkdir -p /opt/matrix/files
+        ExecStartPre=-/bin/podman pull docker.io/matrixdotorg/synapse:latest
+        ExecStartPre=-/bin/podman kill matrix
+        ExecStartPre=-/bin/podman rm matrix
+        ExecStart=/bin/podman run \
+            --name matrix \
+            --env-file /opt/matrix/environment \
+            --volume /opt/matrix/files:/data \
+            --publish 5432:5432/tcp \
+            --publish 8008:8008/tcp \
+            --cap-add=NET_ADMIN \
+            docker.io/matrixdotorg/synapse:latest
+
+        [Install]
+        WantedBy=multi-user.target
+
+    - name: var-mnt-nfs-matrix.mount
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Mount Matrix Synapse data directory
+
+        [Mount]
+        What=web.example.com:/volume1/docker/volumes/matrix/synapse
+        Where=/var/mnt/nfs/matrix
+        Type=nfs4
+
+        [Install]
+        WantedBy=multi-user.target

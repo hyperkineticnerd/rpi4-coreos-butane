@@ -1,0 +1,42 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+    - path: /etc/NetworkManager/system-connections/${bondname}.nmconnection
+      mode: 0600
+      contents:
+        inline: |
+          [connection]
+          id=${bondname}
+          type=bond
+          interface-name=${bondname}
+          [bond]
+          miimon=100
+          mode=active-backup
+          [ipv4]
+          address1=${ip}/${prefix},${gateway}
+          dhcp-hostname=${hostname}
+          dns=${nameserver};
+          dns-search=
+          may-fail=false
+          method=manual
+    - path: /etc/NetworkManager/system-connections/${bondname}-slave-${subnic1}.nmconnection
+      mode: 0600
+      contents:
+        inline: |
+          [connection]
+          id=${bondname}-slave-${subnic1}
+          type=ethernet
+          interface-name=${subnic1}
+          master=${bondname}
+          slave-type=bond
+    - path: /etc/NetworkManager/system-connections/${bondname}-slave-${subnic2}.nmconnection
+      mode: 0600
+      contents:
+        inline: |
+          [connection]
+          id=${bondname}-slave-${subnic2}
+          type=ethernet
+          interface-name=${subnic2}
+          master=${bondname}
+          slave-type=bond

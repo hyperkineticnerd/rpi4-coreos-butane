@@ -1,0 +1,20 @@
+variant: fcos
+version: 1.4.0
+# storage:
+#   disks:
+#   - device: /dev/mmcblk0
+#     wipe_table: false
+#     partitions:
+#     - label: containers
+#       number: 2
+#       size_mib: 3072
+ignition:
+  config:
+    merge:
+      - source: http://web.example.com/coreos/base/host/users/core.ign
+      - source: http://web.example.com/coreos/base/host/network/time.ign
+      - source: http://web.example.com/coreos/base/host/network/dns/homelab.ign
+      - source: http://web.example.com/coreos/base/host/network/fqdn/hostname-rpi5.ign
+      - source: http://web.example.com/coreos/base/apps/matrix/synapse-config.ign
+      - source: http://web.example.com/coreos/base/apps/matrix/synapse-environment.ign
+      - source: http://web.example.com/coreos/base/apps/matrix/synapse-service.ign

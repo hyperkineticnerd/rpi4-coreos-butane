@@ -1,0 +1,27 @@
+variant: fcos
+version: 1.4.0
+storage:
+  disks:
+    - device: /dev/mmcblk0
+      wipe_table: false
+      partitions:
+        - label: containers
+          number: 2
+          size_mib: 3072
+        - label: ipa-data
+          number: 3
+          size_mib: 8192
+ignition:
+  config:
+    merge:
+      - source: http://web.example.com/coreos/base/host/users/core.ign
+      - source: http://web.example.com/coreos/base/host/network/time.ign
+      - source: http://web.example.com/coreos/base/host/network/dns/homelab.ign
+      - source: http://web.example.com/coreos/base/host/network/fqdn/hostname-rpi3.ign
+      - source: http://web.example.com/coreos/base/host/network/ipv6/disabled.ign
+      # - source: http://web.example.com/coreos/base/host/containers/storage/partitions.ign
+      - source: http://web.example.com/coreos/base/host/containers/storage/filesystems.ign
+      - source: http://web.example.com/coreos/base/host/containers/service/setsebool.ign
+      - source: http://web.example.com/coreos/base/apps/freeipa/common/filesystems.ign
+      - source: http://web.example.com/coreos/base/apps/freeipa/common/service.ign
+      - source: http://web.example.com/coreos/base/apps/freeipa/ipa1/config/install.ign

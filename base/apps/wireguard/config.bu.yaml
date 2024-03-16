@@ -1,0 +1,21 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+    - path: /etc/wireguard/wg0.conf
+      mode: 0600
+      contents:
+        inline: |
+          [Interface]
+          Address = 192.168.1.2/24
+          PrivateKey = wireguardprivatekeychangeme
+          ListenPort = 51820
+
+          PostUp   = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o enp1s0 -j MASQUERADE; ip6tables -A FORWARD -i wg0 -j ACCEPT; ip6tables -t nat -A POSTROUTING -o enp1s0 -j MASQUERADE
+          PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o enp1s0 -j MASQUERADE; ip6tables -D FORWARD -i wg0 -j ACCEPT; ip6tables -t nat -D POSTROUTING -o enp1s0 -j MASQUERADE
+
+          [Peer]
+          PublicKey = wireguardpublickeychangeme
+          PresharedKey = wireguardpresharedkeychangeme
+          AllowedIPs = 192.168.88.0/23
+ 

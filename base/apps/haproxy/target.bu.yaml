@@ -1,0 +1,12 @@
+variant: fcos
+version: 1.4.0
+systemd:
+  units:
+    - name: loadbalancer.target
+      enabled: false
+      contents: |
+        [Unit]
+        Description=Loadbalancer Target
+        Requires=multi-user.target
+        After=multi-user.target
+        AllowIsolate=yes

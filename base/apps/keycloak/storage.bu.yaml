@@ -1,0 +1,8 @@
+variant: fcos
+version: 1.4.0
+storage:
+  directories:
+    - path: /var/lib/keycloak
+      overwrite: false
+    - path: /var/lib/keycloak/data
+      overwrite: false

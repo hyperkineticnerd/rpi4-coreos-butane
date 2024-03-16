@@ -1,0 +1,27 @@
+variant: fcos
+version: 1.4.0
+systemd:
+  units:
+    - name: freeipa.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=FreeIPA Server
+        Requires=network-online.target
+        Requires=chrony-wait.service
+        After=network-online.target
+        After=chrony-wait.service
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStartPre=-/bin/podman kill freeipa
+        ExecStartPre=-/bin/podman rm freeipa
+        ExecStartPre=-/bin/podman pull quay.io/hyperkineticnerd/freeipa-server:latest
+        ExecStart=/bin/podman run \
+          --name freeipa \
+          --net=host \
+          --volume /var/lib/ipa-data:/data:Z \
+          quay.io/hyperkineticnerd/freeipa-server:latest
+
+        [Install]
+        WantedBy=multi-user.target

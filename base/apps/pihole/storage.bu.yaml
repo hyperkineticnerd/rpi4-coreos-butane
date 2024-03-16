@@ -1,0 +1,8 @@
+variant: fcos
+version: 1.4.0
+storage:
+  directories:
+    - path: /opt/pihole/etc
+      overwrite: true
+    - path: /opt/pihole/dnsmasq.d
+      overwrite: true

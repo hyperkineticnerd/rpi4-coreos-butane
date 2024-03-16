@@ -1,0 +1,39 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+    - path: /etc/default/pihole
+      mode: 0644
+      overwrite: true
+      contents:
+        inline: |
+          TZ=America/Denver
+          WEBPASSWORD=changeme
+
+    - path: /var/lib/pihole/certs/combined.pem
+      mode: 0644
+      overwrite: true
+      contents:
+        local: files/pihole/combined.pem
+
+    - path: /var/lib/pihole/lighttpd/20-ssl.conf
+      mode: 0644
+      overwrite: true
+      contents:
+        inline: |
+          #Loading openssl
+          server.modules += ( "mod_openssl" )
+
+          setenv.add-environment = ("fqdn" => "true")
+          $SERVER["socket"] == ":443" {
+            ssl.engine  = "enable"
+            ssl.pemfile = "/etc/lighttpd/tls/combined.pem"
+            ssl.openssl.ssl-conf-cmd = ("MinProtocol" => "TLSv1.3", "Options" => "-ServerPreference")
+          }
+
+          # Redirect HTTP to HTTPS
+          $HTTP["scheme"] == "http" {
+              $HTTP["host"] =~ ".*" {
+                  url.redirect = (".*" => "https://%0$0")
+              }
+          }

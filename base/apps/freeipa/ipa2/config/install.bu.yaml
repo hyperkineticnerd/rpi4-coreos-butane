@@ -1,0 +1,16 @@
+variant: fcos
+version: 1.4.0
+storage:
+  files:
+    - path: /var/lib/ipa-data/ipa-server-install-options
+      user:
+        id: 0
+      group:
+        id: 0
+      mode: 0644
+      contents:
+        inline: |
+          --realm=example.com
+          --ds-password=changeme
+          --admin-password=changeme
+          --unattended

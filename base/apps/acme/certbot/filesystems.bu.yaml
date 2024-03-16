@@ -1,0 +1,16 @@
+variant: fcos
+version: 1.4.0
+storage:
+  # filesystems:
+  #   - path: /var/opt/certbot
+  #     device: /dev/disk/by-partlabel/certbot
+  #     format: xfs
+  #     wipe_filesystem: false
+  #     with_mount_unit: true
+  directories:
+    - path: /etc/ipa
+      overwrite: true
+    - path: /etc/letsencrypt
+      overwrite: true
+    - path: /var/lib/letsencrypt
+      overwrite: true
